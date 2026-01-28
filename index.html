@@ -1,49 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Awake Night Result</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f4f7fa; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .custom-shadow { box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03); }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            overflow: hidden;
+            height: auto;
+            width: auto;
+        }
+
+        .card-container {
+            display: inline-block;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+            padding: 5px;
+        }
     </style>
 </head>
+
 <body>
-    <div class="bg-white p-8 rounded-2xl custom-shadow border border-slate-100 text-center min-w-[320px]">
-        <p class="text-[10px] font-bold text-[#b538cf] uppercase tracking-widest mb-2">Avg. Minutes Awake Night</p>
-        <div class="flex items-center justify-center gap-4">
-            <span id="awake-res" class="text-5xl font-extrabold text-slate-800 tracking-tighter">--</span>
-            <button onclick="copyToClipboard('awake-res', this)" class="bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-lg text-slate-500 text-[11px] font-bold transition-all">
+    <div class="card-container min-w-[250px]">
+        <p class="text-[10px] font-bold text-[#b538cf] uppercase tracking-widest mb-1">Avg. Min Awake Night</p>
+        <div class="flex items-center justify-center gap-3">
+            <span id="awake-res" class="text-4xl font-extrabold text-slate-800 tracking-tighter">--</span>
+            <button onclick="copyToClipboard('awake-res', this)"
+                class="bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded text-slate-500 text-[10px] font-bold">
                 <i class="fa-regular fa-copy"></i>
             </button>
         </div>
-        <p class="text-[10px] text-slate-400 mt-2">Based on <span id="awake-cnt">0</span> entries</p>
+        <p class="text-[10px] text-slate-400 mt-1">Based on <span id="awake-cnt">0</span> entries</p>
     </div>
-
     <script>
         function calcMin(data) {
-            const entries = data.split(',').map(l => l.trim()).filter(l => l !== "" && !isNaN(l));
+            const entries = data.split(',').map(l => l.trim()).filter(l => l !== "" && !isNaN(parseFloat(l)));
             if (entries.length === 0) return;
             const sum = entries.reduce((a, b) => a + parseFloat(b), 0);
             document.getElementById('awake-res').innerText = Math.round(sum / entries.length);
             document.getElementById('awake-cnt').innerText = entries.length;
         }
-
         function copyToClipboard(id, btn) {
             const val = document.getElementById(id).innerText;
-            if (val !== "--") {
-                navigator.clipboard.writeText(val);
-                btn.innerHTML = '<i class="fa-solid fa-check text-green-500"></i>';
-                setTimeout(() => { btn.innerHTML = '<i class="fa-regular fa-copy"></i>'; }, 2000);
-            }
+            if (val !== "--") { navigator.clipboard.writeText(val); btn.innerHTML = '<i class="fa-solid fa-check text-green-500"></i>'; setTimeout(() => { btn.innerHTML = '<i class="fa-regular fa-copy"></i>'; }, 2000); }
         }
-
         const params = new URLSearchParams(window.location.search);
         if (params.has('awakeTimes')) calcMin(params.get('awakeTimes'));
     </script>
 </body>
+
 </html>
