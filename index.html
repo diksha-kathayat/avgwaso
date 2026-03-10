@@ -37,7 +37,6 @@
                 <i class="fa-regular fa-copy"></i>
             </button>
         </div>
-        <p class="text-[10px] text-slate-400 mt-1">Based on <span id="awake-cnt">0</span> entries</p>
     </div>
     <script>
         function calcMin(data) {
@@ -45,11 +44,15 @@
             if (entries.length === 0) return;
             const sum = entries.reduce((a, b) => a + parseFloat(b), 0);
             document.getElementById('awake-res').innerText = Math.round(sum / entries.length);
-            document.getElementById('awake-cnt').innerText = entries.length;
+            // Removed the line updating 'awake-cnt'
         }
         function copyToClipboard(id, btn) {
             const val = document.getElementById(id).innerText;
-            if (val !== "--") { navigator.clipboard.writeText(val); btn.innerHTML = '<i class="fa-solid fa-check text-green-500"></i>'; setTimeout(() => { btn.innerHTML = '<i class="fa-regular fa-copy"></i>'; }, 2000); }
+            if (val !== "--") {
+                navigator.clipboard.writeText(val);
+                btn.innerHTML = '<i class="fa-solid fa-check text-green-500"></i>';
+                setTimeout(() => { btn.innerHTML = '<i class="fa-regular fa-copy"></i>'; }, 2000);
+            }
         }
         const params = new URLSearchParams(window.location.search);
         if (params.has('awakeTimes')) calcMin(params.get('awakeTimes'));
